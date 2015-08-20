@@ -2,7 +2,7 @@
   "name": "n00bsys0p-horizon",
   "version": "0.1.0",
   "author": "n00bsys0p",
-  "summary": "Easily manage an instance of NeXT Horizon on your server.",
+  "summary": "Easily manage an instance of the Horizon Platform cryptocurrency client on your server.",
   "license": "Apache 2.0",
   "source": "https://github.com/n00bsys0p/puppet-horizon",
   "issues_url": "https://github.com/n00bsys0p/puppet-horizon/issues",
