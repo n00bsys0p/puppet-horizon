@@ -41,4 +41,20 @@ class horizon(
   }
 
   ::horizon::client { $client_version: }
+
+  class { 'supervisord':
+    install_pip => true
+  }
+
+  supervisord::program { 'horizon':
+    command         => '/etc/alternatives/java -cp classes:lib/*:conf nxt.Nxt',
+    user            => $user,
+    numprocs        => '1',
+    autostart       => true,
+    autorestart     => true,
+    stdout_logfile  => '/var/log/%(program_name)s.log',
+    redirect_stderr => true,
+    directory       => "/var/lib/${user}/releases/current",
+    require         => Horizon::Client[$client_version]
+  }
 }
