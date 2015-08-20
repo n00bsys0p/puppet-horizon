@@ -33,7 +33,7 @@ define horizon::client (
     exec { "extract_horizon_${version}":
       command => "unzip -d ${release_dir} ${cache_dir}/hz-v${version}.zip",
       path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-      user    => 'horizon',
+      user    => $user,
       creates => "${install_dir}"
     } ->
     file { "horizon_${version}_conf":

@@ -5,8 +5,16 @@ class horizon::service {
     install_pip => true
   }
 
+  if $::horizon::client_version =~ /^4/ {
+    $cmd_prefix = 'classes'
+  } else {
+    $cmd_prefix = 'nhz.jar'
+  }
+
+  $java_cmd = "${cmd_prefix}:lib/*:conf nxt.Nxt"
+  $program_cmd = "/etc/alternatives/java -cp ${java_cmd}"
   supervisord::program { $::horizon::service_name:
-    command         => '/etc/alternatives/java -cp classes:lib/*:conf nxt.Nxt',
+    command         => $program_cmd,
     user            => $::horizon::user,
     numprocs        => '1',
     autostart       => true,
