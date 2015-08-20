@@ -29,7 +29,7 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Alex Shepherd <dev@alexshepherd.me>
 #
 # === Copyright
 #
@@ -37,5 +37,8 @@
 #
 class horizon {
 
+  class { 'java':
+    distribution => 'jre',
+  }
 
 }
