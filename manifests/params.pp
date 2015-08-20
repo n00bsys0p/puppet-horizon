@@ -5,4 +5,6 @@ class horizon::params {
   $group = 'horizon'
 
   $client_version = '4.0e'
+  $service_name   = 'horizon'
+  $server_opts    = {}
 }

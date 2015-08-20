@@ -1,0 +1,4 @@
+# Horizon properties file. Managed via n00bsys0p/horizon Puppet module.
+# Change settings via your Puppet configuration, not manually here
+<% @server_opts.each do |key, value| %><%= key %> = <%= value %>
+<% end %>

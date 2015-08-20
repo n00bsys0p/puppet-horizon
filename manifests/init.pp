@@ -14,7 +14,10 @@
 #  include ::horizon
 #
 #  class { 'horizon':
-#    $client_version = '3.9.2'
+#    $client_version = '3.9.2',
+#    $user           = 'hz'
+#    $group          = 'hz',
+#    $service_name   = 'hzclient'
 #  }
 #
 # === Authors
@@ -26,35 +29,21 @@
 # Copyright 2015 Alex Shepherd, unless otherwise noted.
 #
 class horizon(
-  $client_version = $horizon::params::client_version,
-  $user           = $horizon::params::user,
-  $group          = $horizon::params::user
+  $client_version = $::horizon::params::client_version,
+  $user           = $::horizon::params::user,
+  $group          = $::horizon::params::user,
+  $service_name   = $::horizon::params::service_name,
+  $server_opts    = $::horizon::params::server_opts
 ) inherits horizon::params {
-  require ::horizon::configure
 
-  package { 'unzip':
-    ensure => installed,
+  class { '::horizon::configure': } ->
+  ::horizon::client { $client_version:
+    user        => $user,
+    server_opts => $server_opts
+  } ->
+  class { '::horizon::service':
+    require   => Horizon::Client[$client_version],
+    subscribe => Horizon::Client[$client_version]
   }
 
-  class { 'java':
-    distribution => 'jre',
-  }
-
-  ::horizon::client { $client_version: }
-
-  class { 'supervisord':
-    install_pip => true
-  }
-
-  supervisord::program { 'horizon':
-    command         => '/etc/alternatives/java -cp classes:lib/*:conf nxt.Nxt',
-    user            => $user,
-    numprocs        => '1',
-    autostart       => true,
-    autorestart     => true,
-    stdout_logfile  => '/var/log/%(program_name)s.log',
-    redirect_stderr => true,
-    directory       => "/var/lib/${user}/releases/current",
-    require         => Horizon::Client[$client_version]
-  }
 }
