@@ -8,6 +8,7 @@
   "issues_url": "https://github.com/n00bsys0p/puppet-horizon/issues",
   "project_page": "https://github.com/n00bsys0p/puppet-horizon",
   "dependencies": [
-    {"version_requirement":">= 1.4","name":"puppetlabs-java"}
+    {"version_requirement":">= 1.4","name":"puppetlabs-java"},
+    {"version_requirement":">= 1.7","name":"maestrodev-wget"}
   ]
 }
