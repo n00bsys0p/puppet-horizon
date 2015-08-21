@@ -36,14 +36,14 @@ uptime assurance and security via user and process management.
 
 To get started, install this module with:
 
-```
+```bash
 puppet module install n00bsys0p-horizon
 ```
 
 Once you've got it installed, you can just use include ::horizon to use the
 default settings, or use the class syntax to specify changes like so:
 
-```
+```puppet
 class { 'horizon':
   $client_version => '3.9.2',
   $user           => 'hz'
