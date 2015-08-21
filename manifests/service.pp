@@ -21,7 +21,7 @@ class horizon::service {
     autorestart     => true,
     stdout_logfile  => '/var/log/%(program_name)s.log',
     redirect_stderr => true,
-    directory       => "/var/lib/${::horizon::user}/releases/current"
+    directory       => "${::horizon::home_dir}/releases/current"
   }
 
   supervisord::supervisorctl { "restart_${::horizon::service_name}":

@@ -15,41 +15,46 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
-
-## Module Description
-
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+The Horizon module provides a way to easily manage a production instance of the
+[Horizon cryptocurrency client.](https://horizonplatform.io). It handles
+uptime assurance and security via user and process management.
 
 ## Setup
 
 ### What horizon affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+* Installs:
+  * unzip
+  * pip
+  * supervisord
+  * Java Runtime Environment
+* Creates:
+  * Data directory /var/lib/horizon (or the service user's name)
+  * Supervisord program called "horizon" (or the selected service name)
 
 ### Beginning with horizon
 
-The very basic steps needed for a user to get the module up and running.
+To get started, install this module with:
 
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+```
+puppet module install n00bsys0p-horizon
+```
+
+Once you've got it installed, you can just use include ::horizon to use the
+default settings, or use the class syntax to specify changes like so:
+
+```
+class { 'horizon':
+  $client_version => '3.9.2',
+  $user           => 'hz'
+  $group          => 'hz',
+  $service_name   => 'hzclient'
+  $server_opts    => {
+    'nhz.peerServerPort' => '7879',
+    'nhz.myHallmark'     => 'deadbeefcafe'
+  }
+}
+```
 
 ## Usage
 
@@ -58,22 +63,79 @@ the fancy stuff with your module here.
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### Classes
+
+#### horizon
+
+This is the class you will most likely be using to implement the module.
+
+It takes the following parameters:
+
+* $client_version
+  * The version of the Horizon client to install and run. Defaults to 4.0e.
+* $user
+  * The user under which to install the Horizon node.
+* $group
+  * The group under which to install the Horizon node.
+* $service_name
+  * The name of the supervisord 'program' to configure.
+* $server_opts
+  * A hash of options to write to the Horizon configuration file.
+
+#### horizon::configure
+
+Installs prerequisites - Java JRE, unzip; sets up the service user's home
+folder and software deployment folders under /var/lib.
+
+No parameters.
+
+#### horizon::service
+
+Installs supervisord, pip and the Horizon supervisord program.
+
+No parameters.
+
+### Defined Types
+
+#### horizon::client
+
+Downloads and installs a copy of the Horizon client you want to run.
+
+The client software is installed under /var/lib/$::horizon::user/releases.
+
+The one you've set to $current => true will be symlinked to
+/var/lib/$::horizon::user/current
+
+The horizon::client's $title should be set to the version of the Horizon client
+you want to install. The version should not include the 'v' prefix.
+
+Takes the following parameters:
+
+* $ensure
+  * 'absent' will delete the stated version's data directory. Defaults to
+    'installed'.
+* $user
+  * The system user's name. Defaults to 'horizon'.
+* $package_suffix
+  * The Horizon package suffix defines the type of wallet you want to download.
+    Defaults to '-node', as 99% or more of the time that's the one you're
+    looking for in a remote server context.
+* $current
+  * Whether this client is the currently enabled one. If true, this creates a
+    symlink from /var/lib/releases/$::horizon::user to
+    /var/lib/$::horizon::user/current. Defaults to true.
+* $server_opts
+  * A hash of the options to set in the Horizon node configuration file.
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+Currently tested on CentOS 6
+
+If you set multiple client versions as current, the results may be
+unpredictable, as whichever client gets handled last will be the one that ends
+up running.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You may also add any additional sections you feel are
-necessary or important to include here. Please use the `## ` header.
+Developers work in their own trees, then submit pull requests when they think
+their feature or bug fix is ready.

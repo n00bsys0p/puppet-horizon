@@ -8,16 +8,30 @@
 #
 # $client_version
 #   The version of the Horizon client to install
+# $user
+#   The user under which to install the Horizon node
+# $group
+#   The group under which to install the Horizon node
+# $service_name
+#   The name of the supervisord program
+# $server_opts
+#   A hash of options to write to the Horizon configuration file
 #
 # === Examples
 #
 #  include ::horizon
 #
+#  ...or...
+#
 #  class { 'horizon':
-#    $client_version = '3.9.2',
-#    $user           = 'hz'
-#    $group          = 'hz',
-#    $service_name   = 'hzclient'
+#    $client_version => '3.9.2',
+#    $user           => 'hz'
+#    $group          => 'hz',
+#    $service_name   => 'hzclient'
+#    $server_opts    => {
+#      'nhz.peerServerPort' => '7879',
+#      'nhz.myHallmark'     => 'deadbeefcafe'
+#    }
 #  }
 #
 # === Authors
@@ -35,6 +49,8 @@ class horizon(
   $service_name   = $::horizon::params::service_name,
   $server_opts    = $::horizon::params::server_opts
 ) inherits horizon::params {
+
+  $home_dir = "/var/lib/${user}"
 
   class { '::horizon::configure': } ->
   ::horizon::client { $client_version:
