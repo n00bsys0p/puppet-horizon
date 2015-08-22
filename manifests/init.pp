@@ -24,11 +24,11 @@
 #  ...or...
 #
 #  class { 'horizon':
-#    $client_version => '3.9.2',
-#    $user           => 'hz'
-#    $group          => 'hz',
-#    $service_name   => 'hzclient'
-#    $server_opts    => {
+#    client_version => '3.9.2',
+#    user           => 'hz'
+#    group          => 'hz',
+#    service_name   => 'hzclient'
+#    server_opts    => {
 #      'nhz.peerServerPort' => '7879',
 #      'nhz.myHallmark'     => 'deadbeefcafe'
 #    }
