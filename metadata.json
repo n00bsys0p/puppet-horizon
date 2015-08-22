@@ -1,6 +1,6 @@
 {
   "name": "n00bsys0p-horizon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "n00bsys0p",
   "summary": "Easily manage an instance of the Horizon Platform cryptocurrency client on your server.",
   "license": "Apache 2.0",
